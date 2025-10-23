@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bildegalleri</title>
+    <style>
+        /* Grunnleggende stiler */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header og navigasjon */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #3498db;
+        }
+        
+        /* Hovedinnhold */
+        main {
+            min-height: calc(100vh - 140px);
+            padding: 2rem 0;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* Hjemmeside */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #e74c3c;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .feature i {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+        
+        /* Bildegalleri */
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .gallery-header h1 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .gallery-controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .filter-btn {
+            background-color: white;
+            border: 2px solid #3498db;
+            color: #3498db;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            aspect-ratio: 1;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .gallery-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+            padding: 1rem;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover .overlay {
+            transform: translateY(0);
+        }
+        
+        /* Om oss */
+        .about-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .about-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .about-header h1 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .about-content {
+            line-height: 1.8;
+        }
+        
+        .about-content p {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+        
+        /* Modal for bilder */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        
+        /* Responsivt design */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background-color: #2c3e50;
+                display: none;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 1rem 0;
+                text-align: center;
+            }
+            
+            .menu-toggle {
+                display: block;
+                cursor: pointer;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+        
+        /* Simulerte ikoner */
+        .icon {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background-color: #3498db;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Bildegalleri</div>
+                <ul class="nav-links">
+                    <li><a href="#" class="nav-link" data-page="home">Hjem</a></li>
+                    <li><a href="#" class="nav-link" data-page="gallery">Galleri</a></li>
+                    <li><a href="#" class="nav-link" data-page="about">Om Oss</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hjemmeside -->
+        <section id="home" class="page active">
+            <div class="hero">
+                <h1>Velkommen til vårt bildegalleri</h1>
+                <p>Utforsk et spektakulært utvalg av bilder fra ulike kategorier. Fra natur og reiser til arkitektur og kunst.</p>
+                <a href="#" class="btn nav-link" data-page="gallery">Utforsk Galleriet</a>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="icon"></div>
+                    <h3>Høykvalitets bilder</h3>
+                    <p>Alle bildene i vårt galleri er av høy kvalitet og klar for visning på alle enheter.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon"></div>
+                    <h3>Responsivt design</h3>
+                    <p>Nettsiden tilpasser seg perfekt uansett om du bruker mobil, nettbrett eller datamaskin.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon"></div>
+                    <h3>Enkel navigasjon</h3>
+                    <p>Finn bilder enkelt med vårt intuitive grensesnitt og kategorisystem.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bildegalleri -->
+        <section id="gallery" class="page">
+            <div class="gallery-header">
+                <h1>Vårt Bildegalleri</h1>
+                <p>Utforsk vårt utvalg av bilder organisert i kategorier</p>
+            </div>
+            
+            <div class="gallery-controls">
+                <button class="filter-btn active" data-filter="all">Alle</button>
+                <button class="filter-btn" data-filter="natur">Natur</button>
+                <button class="filter-btn" data-filter="by">By</button>
+                <button class="filter-btn" data-filter="dyr">Dyr</button>
+                <button class="filter-btn" data-filter="reise">Reise</button>
+            </div>
+            
+            <div class="gallery-grid" id="gallery-grid">
+                <!-- Bilder vil bli lagt til her med JavaScript -->
+            </div>
+        </section>
+
+        <!-- Om Oss -->
+        <section id="about" class="page">
+            <div class="about-container">
+                <div class="about-header">
+                    <h1>Om Oss</h1>
+                    <p>Lær mer om vårt bildegalleri og formålet</p>
+                </div>
+                
+                <div class="about-content">
+                    <p>Dette bildegalleriet er designet for å vise frem et bredt spekter av bilder fra ulike kategorier. Formålet med nettsiden er å tilby brukerne en estetisk tiltalende og enkel måte å utforske og nyte visuelt innhold på.</p>
+                    
+                    <p>Galleriet er strukturert i et responsivt grid-system som tilpasser seg ulike skjermstørrelser, noe som sikrer en optimal visningsopplevelse uansett enhet. Bildene er organisert i kategorier for å gjøre det enkelt å finne innhold som passer dine interesser.</p>
+                    
+                    <p>Nettsiden er bygget med moderne webteknologier inkludert HTML5, CSS3 og JavaScript for å sikre en sømløs og interaktiv brukeropplevelse. Vi har lagt vekt på både funksjonalitet og estetikk for å skape en helhetlig og tiltalende plattform for bildeentusiaster.</p>
+                    
+                    <p>Vårt mål er å fortsette å utvide galleriet med nye bilder og funksjoner basert på brukerfeedback og teknologiske fremskritt. Vi ønsker å være en pålitelig ressurs for alle som ønsker å utforske og dele visuelt innhold på nettet.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for større bildevisning -->
+    <div class="modal" id="imageModal">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="">
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Bildegalleri. Alle rettigheter reservert.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigasjon mellom sider
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetPage = this.getAttribute('data-page');
+                
+                // Skjul alle sider
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Vis valgt side
+                document.getElementById(targetPage).classList.add('active');
+                
+                // Hvis vi går til galleriet, last inn bildene
+                if (targetPage === 'gallery') {
+                    loadGalleryImages();
+                }
+            });
+        });
+
+        // Bildegalleri funksjonalitet
+        function loadGalleryImages() {
+            const galleryGrid = document.getElementById('gallery-grid');
+            
+            // Tøm eksisterende innhold
+            galleryGrid.innerHTML = '';
+            
+            // Simulerte bildedata - i et ekte prosjekt ville disse hentes fra en mappe
+            const images = [
+                { src: 'img/natur1.jpg', category: 'natur', title: 'Fjellandskap' },
+                { src: 'img/natur2.jpg', category: 'natur', title: 'Skogsti' },
+                { src: 'img/by1.jpg', category: 'by', title: 'Bylandskap' },
+                { src: 'img/by2.jpg', category: 'by', title: 'Urban arkitektur' },
+                { src: 'img/dyr1.jpg', category: 'dyr', title: 'Rødrev' },
+                { src: 'img/dyr2.jpg', category: 'dyr', title: 'Havørn' },
+                { src: 'img/reise1.jpg', category: 'reise', title: 'Eksotisk strand' },
+                { src: 'img/reise2.jpg', category: 'reise', title: 'Kulturarv' },
+                { src: 'img/natur3.jpg', category: 'natur', title: 'Vannfall' },
+                { src: 'img/by3.jpg', category: 'by', title: 'Nattlig by' },
+                { src: 'img/dyr3.jpg', category: 'dyr', title: 'Sommerfugl' },
+                { src: 'img/reise3.jpg', category: 'reise', title: 'Historisk monument' }
+            ];
+            
+            // Legg til bilder i galleriet
+            images.forEach(image => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = `gallery-item ${image.category}`;
+                galleryItem.setAttribute('data-category', image.category);
+                
+                // For demo-formål bruker vi placeholder-bilder
+                // I et ekte prosjekt ville vi brukt de faktiske bildene
+                const placeholderUrl = `https://picsum.photos/400/400?random=${Math.floor(Math.random() * 100)}`;
+                
+                galleryItem.innerHTML = `
+                    <img src="${placeholderUrl}" alt="${image.title}">
+                    <div class="overlay">
+                        <h3>${image.title}</h3>
+                    </div>
+                `;
+                
+                galleryGrid.appendChild(galleryItem);
+                
+                // Legg til klikk-event for å åpne bildet i modal
+                galleryItem.addEventListener('click', function() {
+                    openModal(placeholderUrl, image.title);
+                });
+            });
+            
+            // Legg til filter-funksjonalitet
+            setupFilterButtons();
+        }
+        
+        function setupFilterButtons() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Fjern 'active' klasse fra alle knapper
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Legg til 'active' klasse på klikket knapp
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    filterGallery(filter);
+                });
+            });
+        }
+        
+        function filterGallery(category) {
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            galleryItems.forEach(item => {
+                if (category === 'all' || item.getAttribute('data-category') === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        // Modal funksjonalitet
+        function openModal(imageSrc, imageTitle) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            
+            modalImage.src = imageSrc;
+            modalImage.alt = imageTitle;
+            modal.style.display = 'flex';
+            
+            // Lukk modal når man klikker på X
+            document.querySelector('.close-modal').addEventListener('click', closeModal);
+            
+            // Lukk modal når man klikker utenfor bildet
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        }
+        
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+        
+        // Last inn galleribilder når siden lastes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Siden vi starter på hjem-siden, trenger vi ikke laste bildene med en gang
+            // De vil lastes når brukeren navigerer til galleriet
+        });
+    </script>
+</body>
+</html>
