@@ -339,6 +339,25 @@
             border-radius: 50%;
             margin-bottom: 1rem;
         }
+        
+        /* Feilmelding for manglende bilder */
+        .image-error {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .image-error::before {
+            content: "⚠️";
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -412,17 +431,13 @@
                 </div>
                 
                 <div class="about-content">
-                    <p>
-                        Velkommen til vårt AI-bildegalleri - et digitalt rom der teknologi og kreativitet møtes. Denne nettsiden er skapt for å vise frem mangfoldet og estetikken i kunst skapt ved hjelp av kunstig intelligens. Her kan du utforske en stadig voksende samling av AI-genererte bilder innen kategorier som natur, byliv, dyr og reise.
-
-                        Formålet med bildegalleriet er å gjøre det enkelt og inspirerende for alle å oppleve den nye formen for digital kunst som kunstig intelligens muliggjør. Hvert bilde representerer et møte mellom menneskelig idé og maskinell kreativitet – et resultat av algoritmer som tolker, kombinerer og gjenoppfinner visuelle uttrykk på unike måter.
-
-                        Nettsiden er bygget med moderne webteknologier som HTML5, CSS3 og JavaScript, og har et responsivt design som tilpasser seg alle skjermstørrelser – enten du bruker mobil, nettbrett eller datamaskin. Navigasjonen er enkel og intuitiv, slik at du raskt kan filtrere bilder etter interesse og utforske ulike temaer.
-
-                        Vi ønsker å gjøre kunst mer tilgjengelig, og samtidig bidra til å skape forståelse for hvordan kunstig intelligens kan brukes som et kreativt verktøy. Dette galleriet er derfor ikke bare en samling bilder, men et levende prosjekt som utvikler seg over tid – med stadig nye bilder, ideer og funksjoner basert på tilbakemeldinger fra brukerne.
-
-                        Vårt mål er å inspirere, engasjere og vise at teknologi og kunst kan eksistere i vakker harmoni.
-                    </p>
+                    <p>Dette bildegalleriet er designet for å vise frem et bredt spekter av bilder fra ulike kategorier. Formålet med nettsiden er å tilby brukerne en estetisk tiltalende og enkel måte å utforske og nyte visuelt innhold på.</p>
+                    
+                    <p>Galleriet er strukturert i et responsivt grid-system som tilpasser seg ulike skjermstørrelser, noe som sikrer en optimal visningsopplevelse uansett enhet. Bildene er organisert i kategorier for å gjøre det enkelt å finne innhold som passer dine interesser.</p>
+                    
+                    <p>Nettsiden er bygget med moderne webteknologier inkludert HTML5, CSS3 og JavaScript for å sikre en sømløs og interaktiv brukeropplevelse. Vi har lagt vekt på både funksjonalitet og estetikk for å skape en helhetlig og tiltalende plattform for bildeentusiaster.</p>
+                    
+                    <p>Vårt mål er å fortsette å utvide galleriet med nye bilder og funksjoner basert på brukerfeedback og teknologiske fremskritt. Vi ønsker å være en pålitelig ressurs for alle som ønsker å utforske og dele visuelt innhold på nettet.</p>
                 </div>
             </div>
         </section>
@@ -471,36 +486,38 @@
             // Tøm eksisterende innhold
             galleryGrid.innerHTML = '';
             
-            // Simulerte bildedata - i et ekte prosjekt ville disse hentes fra en mappe
+            // Bildedata med spesifikke bilder for hver kategori
             const images = [
-                { src: 'img/natur1.jpg', category: 'natur', title: 'Fjellandskap' },
-                { src: 'img/natur2.jpg', category: 'natur', title: 'Skogsti' },
-                { src: 'img/by1.jpg', category: 'by', title: 'Bylandskap' },
-                { src: 'img/by2.jpg', category: 'by', title: 'Urban arkitektur' },
-                { src: 'img/dyr1.jpg', category: 'dyr', title: 'Rødrev' },
-                { src: 'img/dyr2.jpg', category: 'dyr', title: 'Havørn' },
-                { src: 'img/reise1.jpg', category: 'reise', title: 'Eksotisk strand' },
-                { src: 'img/reise2.jpg', category: 'reise', title: 'Kulturarv' },
-                { src: 'img/natur3.jpg', category: 'natur', title: 'Vannfall' },
-                { src: 'img/by3.jpg', category: 'by', title: 'Nattlig by' },
-                { src: 'img/dyr3.jpg', category: 'dyr', title: 'Sommerfugl' },
-                { src: 'img/reise3.jpg', category: 'reise', title: 'Historisk monument' }
+                { src: 'img/natur.png', category: 'natur', title: 'Natur' },
+                { src: 'img/by.png', category: 'by', title: 'By' },
+                { src: 'img/dyr.png', category: 'dyr', title: 'Dyr' },
+                { src: 'img/reise.png', category: 'reise', title: 'Reise' }
             ];
             
-            // Legg til bilder i galleriet
+            // For å gjøre galleriet mer interessant, legger vi til flere instanser av hvert bilde
+            // med litt variasjon i titlene
+            const expandedImages = [];
             images.forEach(image => {
+                // Legg til 3 varianter av hvert bilde for å fylle ut galleriet
+                for (let i = 1; i <= 3; i++) {
+                    expandedImages.push({
+                        ...image,
+                        title: `${image.title} ${i}`
+                    });
+                }
+            });
+            
+            // Legg til bilder i galleriet
+            expandedImages.forEach(image => {
                 const galleryItem = document.createElement('div');
                 galleryItem.className = `gallery-item ${image.category}`;
                 galleryItem.setAttribute('data-category', image.category);
                 
-                // For demo-formål bruker vi placeholder-bilder
-                // I et ekte prosjekt ville vi brukt de faktiske bildene
-                const placeholderUrl = `https://picsum.photos/400/400?random=${Math.floor(Math.random() * 100)}`;
-                
                 galleryItem.innerHTML = `
-                    <img src="${placeholderUrl}" alt="${image.title}">
+                    <img src="${image.src}" alt="${image.title}" onerror="this.parentNode.innerHTML='<div class=\'image-error\'>Bildet kunne ikke lastes:<br>${image.src}</div>'">
                     <div class="overlay">
                         <h3>${image.title}</h3>
+                        <p>Kategori: ${image.category}</p>
                     </div>
                 `;
                 
@@ -508,7 +525,7 @@
                 
                 // Legg til klikk-event for å åpne bildet i modal
                 galleryItem.addEventListener('click', function() {
-                    openModal(placeholderUrl, image.title);
+                    openModal(image.src, image.title);
                 });
             });
             
